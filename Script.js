@@ -1,16 +1,17 @@
  (cd "$(git rev-parse --show-toplevel)" && git apply --3way <<'EOF' 
 diff --git a/script.js b/script.js
-index 0a43f3fd51efd92de9bbedbe4202c9b903e9675a..5320fe3f4ee01bee1d177374dd4d4e7db2f0452b 100644
+index 0a43f3fd51efd92de9bbedbe4202c9b903e9675a..296c5ee52447eb1853db3bf3d118c3cfca328c2f 100644
 --- a/script.js
 +++ b/script.js
-@@ -1,443 +1,263 @@
+@@ -1,443 +1,247 @@
  // ---------- LOGIN ----------
- let isLoggedIn = false;
- 
+-let isLoggedIn = false;
+-
 -// Auto login if user already exists
- if (localStorage.getItem("user")) {
-   isLoggedIn = true;
- }
+-if (localStorage.getItem("user")) {
+-  isLoggedIn = true;
+-}
++let isLoggedIn = Boolean(localStorage.getItem("user"));
  
  // ---------- SLIDER ----------
  let slide = 0;
@@ -22,7 +23,9 @@ index 0a43f3fd51efd92de9bbedbe4202c9b903e9675a..5320fe3f4ee01bee1d177374dd4d4e7d
      s.classList.toggle("active", i === slide);
    });
  
-   bar.style.width = (slide / (slides.length - 1)) * 100 + "%";
+-  bar.style.width = (slide / (slides.length - 1)) * 100 + "%";
++  const denominator = Math.max(slides.length - 1, 1);
++  bar.style.width = (slide / denominator) * 100 + "%";
  }
  
  function next() {
@@ -32,14 +35,16 @@ index 0a43f3fd51efd92de9bbedbe4202c9b903e9675a..5320fe3f4ee01bee1d177374dd4d4e7d
    }
  
    if (slide < slides.length - 1) {
-     slide++;
+-    slide++;
++    slide += 1;
      updateUI();
    }
  }
  
  function back() {
    if (slide > 0) {
-     slide--;
+-    slide--;
++    slide -= 1;
      updateUI();
    }
  }
@@ -73,11 +78,12 @@ index 0a43f3fd51efd92de9bbedbe4202c9b903e9675a..5320fe3f4ee01bee1d177374dd4d4e7d
  
    if (!input.value.trim()) return;
  
-   goals.push({
-     name: input.value.trim(),
-     color
-   });
- 
+-  goals.push({
+-    name: input.value.trim(),
+-    color
+-  });
+-
++  goals.push({ name: input.value.trim(), color });
    input.value = "";
    renderGoals();
  }
@@ -88,11 +94,11 @@ index 0a43f3fd51efd92de9bbedbe4202c9b903e9675a..5320fe3f4ee01bee1d177374dd4d4e7d
  }
  
  function renderGoals() {
-   document.getElementById("goals").innerHTML =
+-  document.getElementById("goals").innerHTML =
 -    goals.map((g, i) => `
-+    goals
-+      .map(
-+        (g, i) => `
++  document.getElementById("goals").innerHTML = goals
++    .map(
++      (g, i) => `
        <div class="goal-box">
          <strong>${g.name}</strong>
          <div class="color-bar" style="background:${g.color}"></div>
@@ -100,14 +106,14 @@ index 0a43f3fd51efd92de9bbedbe4202c9b903e9675a..5320fe3f4ee01bee1d177374dd4d4e7d
        </div>
 -    `).join("");
 +    `
-+      )
-+      .join("");
++    )
++    .join("");
  
-   document.getElementById("tasksArea").innerHTML =
+-  document.getElementById("tasksArea").innerHTML =
 -    goals.map((g, i) => `
-+    goals
-+      .map(
-+        (g, i) => `
++  document.getElementById("tasksArea").innerHTML = goals
++    .map(
++      (g, i) => `
        <div class="goal-box">
          <strong>${g.name}</strong>
          <div class="color-bar" style="background:${g.color}"></div>
@@ -115,8 +121,8 @@ index 0a43f3fd51efd92de9bbedbe4202c9b903e9675a..5320fe3f4ee01bee1d177374dd4d4e7d
        </div>
 -    `).join("");
 +    `
-+      )
-+      .join("");
++    )
++    .join("");
  }
  
  /* ---------- TASK BATCHING ---------- */
@@ -149,8 +155,9 @@ index 0a43f3fd51efd92de9bbedbe4202c9b903e9675a..5320fe3f4ee01bee1d177374dd4d4e7d
            <strong>${task}</strong>
            <span class="delete" onclick="deleteTask(${id})">✕</span>
            <div class="color-bar" id="bar${id}" style="background:${goal.color}"></div>
-           <input type="color" id="color${id}" value="${goal.color}"
-             onchange="updateColor(${id})">
+-          <input type="color" id="color${id}" value="${goal.color}"
+-            onchange="updateColor(${id})">
++          <input type="color" id="color${id}" value="${goal.color}" onchange="updateColor(${id})">
            <div class="days">
 -            ${["Mon","Tue","Wed","Thu","Fri","Sat","Sun"].map(d=>`
 +            ${["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
@@ -179,7 +186,8 @@ index 0a43f3fd51efd92de9bbedbe4202c9b903e9675a..5320fe3f4ee01bee1d177374dd4d4e7d
  
  function deleteTask(id) {
    allTasks[id].deleted = true;
-   document.getElementById("task" + id).remove();
+-  document.getElementById("task" + id).remove();
++  document.getElementById("task" + id)?.remove();
  }
  
  /* ---------- TIMETABLE ---------- */
@@ -200,9 +208,10 @@ index 0a43f3fd51efd92de9bbedbe4202c9b903e9675a..5320fe3f4ee01bee1d177374dd4d4e7d
 -    days.forEach(d => {
 +    days.forEach((d) => {
        const box = document.getElementById(i + d);
-       if (box && box.checked) {
-         table[d].push(t);
-       }
+-      if (box && box.checked) {
+-        table[d].push(t);
+-      }
++      if (box && box.checked) table[d].push(t);
      });
    });
  
@@ -215,11 +224,12 @@ index 0a43f3fd51efd92de9bbedbe4202c9b903e9675a..5320fe3f4ee01bee1d177374dd4d4e7d
        <div class="day-column">
          <h4>${d}</h4>
 -        ${table[d].map(t => `
+-          <div class="task" style="background:${t.color}33;
+-               box-shadow: inset 6px 0 0 ${t.color}">
 +        ${table[d]
 +          .map(
 +            (t) => `
-           <div class="task" style="background:${t.color}33;
-                box-shadow: inset 6px 0 0 ${t.color}">
++          <div class="task" style="background:${t.color}33; box-shadow: inset 6px 0 0 ${t.color}">
              ${t.task}
            </div>
 -        `).join("")}
@@ -229,10 +239,10 @@ index 0a43f3fd51efd92de9bbedbe4202c9b903e9675a..5320fe3f4ee01bee1d177374dd4d4e7d
        </div>`;
    });
  
-   const legend = document.getElementById("legend");
+-  const legend = document.getElementById("legend");
 -  legend.innerHTML = Object.entries(legendMap).map(
 -    ([goal, color]) => `
-+  legend.innerHTML = Object.entries(legendMap)
++  document.getElementById("legend").innerHTML = Object.entries(legendMap)
 +    .map(
 +      ([goal, color]) => `
        <div class="legend-item">
@@ -241,14 +251,10 @@ index 0a43f3fd51efd92de9bbedbe4202c9b903e9675a..5320fe3f4ee01bee1d177374dd4d4e7d
        </div>
      `
 -  ).join("");
-+    )
-+    .join("");
- 
+-
 -  next();
 -}
-+  document.getElementById("aiSuggestion").innerHTML =
-+    "Great start! Keep high-effort tasks on your main focus day and leave buffer time for recovery.";
- 
+-
 -/* INIT */
 -updateUI();
 -// ================= ROOT CONTAINER =================
@@ -305,7 +311,9 @@ index 0a43f3fd51efd92de9bbedbe4202c9b903e9675a..5320fe3f4ee01bee1d177374dd4d4e7d
 -        </ul>
 -    `;
 -}
--
++    )
++    .join("");
+ 
 -// 2️⃣ Day Plan & Progress
 -function showDayPlan() {
 -    mainContent.innerHTML = `
@@ -336,7 +344,9 @@ index 0a43f3fd51efd92de9bbedbe4202c9b903e9675a..5320fe3f4ee01bee1d177374dd4d4e7d
 -        </p>
 -    `;
 -}
--
++  document.getElementById("aiSuggestion").innerHTML =
++    "Great start! Keep high-effort tasks on your main focus day and leave buffer time for recovery.";
+ 
 -// 3️⃣ Rewards & Penalty
 -function showRewards() {
 -    mainContent.innerHTML = `
@@ -424,15 +434,6 @@ index 0a43f3fd51efd92de9bbedbe4202c9b903e9675a..5320fe3f4ee01bee1d177374dd4d4e7d
 -        color: #111;
 -        font-family: Arial, sans-serif;
 -        transition: 0.3s;
--    }
--
--    /* Example content */
--    .box {
--        background: white;
--        padding: 20px;
--        margin: 60px auto;
--        width: 70%;
--        border-radius: 10px;
 +function renderDatabaseTables() {
 +  const tableConfig = [
 +    {
@@ -450,18 +451,16 @@ index 0a43f3fd51efd92de9bbedbe4202c9b903e9675a..5320fe3f4ee01bee1d177374dd4d4e7d
 +  ];
 +
 +  const container = document.getElementById("dbTables");
++  if (!container) return;
++
 +  container.innerHTML = tableConfig
 +    .map(
 +      (table) => `
 +      <div class="schema-card">
 +        <h4>${table.name}</h4>
 +        <table class="schema-table">
-+          <thead>
-+            <tr><th>Column</th></tr>
-+          </thead>
-+          <tbody>
-+            ${table.columns.map((column) => `<tr><td>${column}</td></tr>`).join("")}
-+          </tbody>
++          <thead><tr><th>Column</th></tr></thead>
++          <tbody>${table.columns.map((column) => `<tr><td>${column}</td></tr>`).join("")}</tbody>
 +        </table>
 +      </div>
 +    `
@@ -469,6 +468,15 @@ index 0a43f3fd51efd92de9bbedbe4202c9b903e9675a..5320fe3f4ee01bee1d177374dd4d4e7d
 +    .join("");
 +}
  
+-    /* Example content */
+-    .box {
+-        background: white;
+-        padding: 20px;
+-        margin: 60px auto;
+-        width: 70%;
+-        border-radius: 10px;
+-    }
+-
 -    /* DARK CONTRAST MODE */
 -    .dark-mode {
 -        background: #000;
