@@ -1,255 +1,317 @@
  (cd "$(git rev-parse --show-toplevel)" && git apply --3way <<'EOF' 
 diff --git a/script.js b/script.js
-index 0a43f3fd51efd92de9bbedbe4202c9b903e9675a..296c5ee52447eb1853db3bf3d118c3cfca328c2f 100644
+index 0a43f3fd51efd92de9bbedbe4202c9b903e9675a..2a7040a6bfc247fa1b60497a8ed2999441893e3f 100644
 --- a/script.js
 +++ b/script.js
-@@ -1,443 +1,247 @@
- // ---------- LOGIN ----------
+@@ -1,443 +1,137 @@
+-// ---------- LOGIN ----------
 -let isLoggedIn = false;
 -
 -// Auto login if user already exists
 -if (localStorage.getItem("user")) {
 -  isLoggedIn = true;
 -}
-+let isLoggedIn = Boolean(localStorage.getItem("user"));
- 
- // ---------- SLIDER ----------
- let slide = 0;
- const slides = document.querySelectorAll(".slide");
- const bar = document.getElementById("bar");
- 
- function updateUI() {
-   slides.forEach((s, i) => {
-     s.classList.toggle("active", i === slide);
-   });
- 
--  bar.style.width = (slide / (slides.length - 1)) * 100 + "%";
-+  const denominator = Math.max(slides.length - 1, 1);
-+  bar.style.width = (slide / denominator) * 100 + "%";
- }
- 
- function next() {
-   if (!isLoggedIn && slide === 0) {
-     alert("Please login first");
-     return;
-   }
- 
-   if (slide < slides.length - 1) {
--    slide++;
-+    slide += 1;
-     updateUI();
-   }
- }
- 
- function back() {
-   if (slide > 0) {
--    slide--;
-+    slide -= 1;
-     updateUI();
-   }
- }
- 
- // ---------- LOGIN FUNCTION ----------
- function loginUser() {
-   const username = document.getElementById("username").value.trim();
-   const password = document.getElementById("password").value.trim();
- 
-   if (!username || !password) {
-     alert("Please enter username and password");
-     return;
-   }
- 
--  // Demo login
-   localStorage.setItem("user", username);
-   isLoggedIn = true;
 -
-   next();
- }
- 
- /* ---------- DATA ---------- */
- let goals = [];
- let allTasks = [];
- 
- /* ---------- GOALS ---------- */
- 
- function addGoal() {
-   const input = document.getElementById("goalInput");
-   const color = document.getElementById("goalColor").value;
- 
-   if (!input.value.trim()) return;
- 
+-// ---------- SLIDER ----------
+-let slide = 0;
+-const slides = document.querySelectorAll(".slide");
+-const bar = document.getElementById("bar");
+-
+-function updateUI() {
+-  slides.forEach((s, i) => {
+-    s.classList.toggle("active", i === slide);
+-  });
+-
+-  bar.style.width = (slide / (slides.length - 1)) * 100 + "%";
+-}
+-
+-function next() {
+-  if (!isLoggedIn && slide === 0) {
+-    alert("Please login first");
+-    return;
+-  }
+-
+-  if (slide < slides.length - 1) {
+-    slide++;
+-    updateUI();
+-  }
+-}
+-
+-function back() {
+-  if (slide > 0) {
+-    slide--;
+-    updateUI();
+-  }
+-}
+-
+-// ---------- LOGIN FUNCTION ----------
+-function loginUser() {
+-  const username = document.getElementById("username").value.trim();
+-  const password = document.getElementById("password").value.trim();
+-
+-  if (!username || !password) {
+-    alert("Please enter username and password");
+-    return;
+-  }
+-
+-  // Demo login
+-  localStorage.setItem("user", username);
+-  isLoggedIn = true;
+-
+-  next();
+-}
+-
+-/* ---------- DATA ---------- */
+-let goals = [];
+-let allTasks = [];
+-
+-/* ---------- GOALS ---------- */
+-
+-function addGoal() {
+-  const input = document.getElementById("goalInput");
+-  const color = document.getElementById("goalColor").value;
+-
+-  if (!input.value.trim()) return;
+-
 -  goals.push({
 -    name: input.value.trim(),
 -    color
--  });
++const infraBody = document.getElementById("infraBody");
++const sensorBody = document.getElementById("sensorBody");
++const alertBody = document.getElementById("alertBody");
++const flash = document.getElementById("flash");
++
++function showMessage(message, isError = false) {
++  flash.textContent = message;
++  flash.className = isError ? "show error" : "show";
++  setTimeout(() => {
++    flash.className = "";
++  }, 2000);
++}
++
++async function api(url, options = {}) {
++  const res = await fetch(url, {
++    headers: { "Content-Type": "application/json" },
++    ...options
+   });
 -
-+  goals.push({ name: input.value.trim(), color });
-   input.value = "";
-   renderGoals();
- }
- 
- function deleteGoal(i) {
-   goals.splice(i, 1);
-   renderGoals();
- }
- 
- function renderGoals() {
+-  input.value = "";
+-  renderGoals();
+-}
+-
+-function deleteGoal(i) {
+-  goals.splice(i, 1);
+-  renderGoals();
+-}
+-
+-function renderGoals() {
 -  document.getElementById("goals").innerHTML =
 -    goals.map((g, i) => `
-+  document.getElementById("goals").innerHTML = goals
-+    .map(
-+      (g, i) => `
-       <div class="goal-box">
-         <strong>${g.name}</strong>
-         <div class="color-bar" style="background:${g.color}"></div>
-         <span class="delete" onclick="deleteGoal(${i})">✕</span>
-       </div>
+-      <div class="goal-box">
+-        <strong>${g.name}</strong>
+-        <div class="color-bar" style="background:${g.color}"></div>
+-        <span class="delete" onclick="deleteGoal(${i})">✕</span>
+-      </div>
 -    `).join("");
-+    `
-+    )
-+    .join("");
- 
+-
 -  document.getElementById("tasksArea").innerHTML =
 -    goals.map((g, i) => `
-+  document.getElementById("tasksArea").innerHTML = goals
-+    .map(
-+      (g, i) => `
-       <div class="goal-box">
-         <strong>${g.name}</strong>
-         <div class="color-bar" style="background:${g.color}"></div>
-         <textarea id="tasks${i}" placeholder="Write tasks..."></textarea>
-       </div>
+-      <div class="goal-box">
+-        <strong>${g.name}</strong>
+-        <div class="color-bar" style="background:${g.color}"></div>
+-        <textarea id="tasks${i}" placeholder="Write tasks..."></textarea>
+-      </div>
 -    `).join("");
-+    `
-+    )
-+    .join("");
- }
- 
- /* ---------- TASK BATCHING ---------- */
- 
- function prepareBatch() {
-   allTasks = [];
-   const batch = document.getElementById("batchArea");
-   batch.innerHTML = "";
- 
-   goals.forEach((goal, i) => {
+-}
+-
+-/* ---------- TASK BATCHING ---------- */
+-
+-function prepareBatch() {
+-  allTasks = [];
+-  const batch = document.getElementById("batchArea");
+-  batch.innerHTML = "";
+-
+-  goals.forEach((goal, i) => {
 -    const lines = document.getElementById("tasks" + i).value
 -      .split("\n")
 -      .filter(x => x.trim());
-+    const taskInput = document.getElementById("tasks" + i);
-+    const lines = taskInput ? taskInput.value.split("\n").filter((x) => x.trim()) : [];
- 
+-
 -    lines.forEach(task => {
-+    lines.forEach((task) => {
-       const id = allTasks.length;
- 
-       allTasks.push({
-         task,
-         goal: goal.name,
-         color: goal.color,
-         deleted: false
-       });
- 
-       batch.innerHTML += `
-         <div class="task-box" id="task${id}">
-           <strong>${task}</strong>
-           <span class="delete" onclick="deleteTask(${id})">✕</span>
-           <div class="color-bar" id="bar${id}" style="background:${goal.color}"></div>
+-      const id = allTasks.length;
+-
+-      allTasks.push({
+-        task,
+-        goal: goal.name,
+-        color: goal.color,
+-        deleted: false
+-      });
+-
+-      batch.innerHTML += `
+-        <div class="task-box" id="task${id}">
+-          <strong>${task}</strong>
+-          <span class="delete" onclick="deleteTask(${id})">✕</span>
+-          <div class="color-bar" id="bar${id}" style="background:${goal.color}"></div>
 -          <input type="color" id="color${id}" value="${goal.color}"
 -            onchange="updateColor(${id})">
-+          <input type="color" id="color${id}" value="${goal.color}" onchange="updateColor(${id})">
-           <div class="days">
+-          <div class="days">
 -            ${["Mon","Tue","Wed","Thu","Fri","Sat","Sun"].map(d=>`
-+            ${["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
-+              .map(
-+                (d) => `
-               <label>
-                 <input type="checkbox" id="${id}${d}"> ${d}
-               </label>
+-              <label>
+-                <input type="checkbox" id="${id}${d}"> ${d}
+-              </label>
 -            `).join("")}
-+            `
-+              )
-+              .join("")}
-           </div>
-         </div>`;
+-          </div>
+-        </div>`;
++  const data = await res.json();
++  if (!res.ok) throw new Error(data.error || "Request failed");
++  return data;
++}
++
++function renderInfrastructure(rows) {
++  infraBody.innerHTML = rows
++    .map(
++      (r) => `
++      <tr>
++        <td>${r.id}</td>
++        <td>${r.name}</td>
++        <td>${r.type}</td>
++        <td>${r.location}</td>
++      </tr>`
++    )
++    .join("");
++}
++
++function renderSensors(rows) {
++  sensorBody.innerHTML = rows
++    .map(
++      (r) => `
++      <tr>
++        <td>${r.infra_id}</td>
++        <td>${r.infra_name || "-"}</td>
++        <td>${r.sensor_value}</td>
++        <td>${r.status}</td>
++        <td>${r.timestamp}</td>
++      </tr>`
++    )
++    .join("");
++}
++
++function renderAlerts(rows) {
++  alertBody.innerHTML = rows
++    .map(
++      (r) => `
++      <tr>
++        <td>${r.alert_id}</td>
++        <td>${r.infra_id}</td>
++        <td>${r.infra_name || "-"}</td>
++        <td>${r.message}</td>
++        <td>${r.status}</td>
++      </tr>`
++    )
++    .join("");
++}
++
++async function refreshAll() {
++  const [infra, sensors, alerts] = await Promise.all([
++    api("/api/infrastructure"),
++    api("/api/sensordata"),
++    api("/api/alerts")
++  ]);
++
++  renderInfrastructure(infra);
++  renderSensors(sensors);
++  renderAlerts(alerts);
++}
++
++document.getElementById("infraForm").addEventListener("submit", async (e) => {
++  e.preventDefault();
++  try {
++    await api("/api/infrastructure", {
++      method: "POST",
++      body: JSON.stringify({
++        name: document.getElementById("infraName").value.trim(),
++        type: document.getElementById("infraType").value,
++        location: document.getElementById("infraLocation").value.trim()
++      })
      });
-   });
- 
-   next();
- }
- 
- function updateColor(id) {
-   const color = document.getElementById("color" + id).value;
-   document.getElementById("bar" + id).style.background = color;
-   allTasks[id].color = color;
- }
- 
- function deleteTask(id) {
-   allTasks[id].deleted = true;
+-  });
+-
+-  next();
+-}
+-
+-function updateColor(id) {
+-  const color = document.getElementById("color" + id).value;
+-  document.getElementById("bar" + id).style.background = color;
+-  allTasks[id].color = color;
+-}
+-
+-function deleteTask(id) {
+-  allTasks[id].deleted = true;
 -  document.getElementById("task" + id).remove();
-+  document.getElementById("task" + id)?.remove();
- }
- 
- /* ---------- TIMETABLE ---------- */
- 
- function generate() {
+-}
+-
+-/* ---------- TIMETABLE ---------- */
+-
+-function generate() {
 -  const days = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
-+  const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-   const table = {};
-   const legendMap = {};
- 
+-  const table = {};
+-  const legendMap = {};
+-
 -  days.forEach(d => table[d] = []);
-+  days.forEach((d) => (table[d] = []));
- 
-   allTasks.forEach((t, i) => {
-     if (t.deleted) return;
-     if (!legendMap[t.goal]) legendMap[t.goal] = t.color;
- 
+-
+-  allTasks.forEach((t, i) => {
+-    if (t.deleted) return;
+-    if (!legendMap[t.goal]) legendMap[t.goal] = t.color;
+-
 -    days.forEach(d => {
-+    days.forEach((d) => {
-       const box = document.getElementById(i + d);
+-      const box = document.getElementById(i + d);
 -      if (box && box.checked) {
 -        table[d].push(t);
 -      }
-+      if (box && box.checked) table[d].push(t);
++    e.target.reset();
++    await refreshAll();
++    showMessage("Infrastructure added");
++  } catch (error) {
++    showMessage(error.message, true);
++  }
++});
++
++document.getElementById("sensorForm").addEventListener("submit", async (e) => {
++  e.preventDefault();
++  try {
++    await api("/api/sensordata", {
++      method: "POST",
++      body: JSON.stringify({
++        infra_id: Number(document.getElementById("sensorInfraId").value),
++        sensor_value: Number(document.getElementById("sensorValue").value),
++        status: document.getElementById("sensorStatus").value.trim()
++      })
      });
-   });
- 
-   const grid = document.getElementById("table");
-   grid.innerHTML = "";
- 
+-  });
+-
+-  const grid = document.getElementById("table");
+-  grid.innerHTML = "";
+-
 -  days.forEach(d => {
-+  days.forEach((d) => {
-     grid.innerHTML += `
-       <div class="day-column">
-         <h4>${d}</h4>
+-    grid.innerHTML += `
+-      <div class="day-column">
+-        <h4>${d}</h4>
 -        ${table[d].map(t => `
 -          <div class="task" style="background:${t.color}33;
 -               box-shadow: inset 6px 0 0 ${t.color}">
-+        ${table[d]
-+          .map(
-+            (t) => `
-+          <div class="task" style="background:${t.color}33; box-shadow: inset 6px 0 0 ${t.color}">
-             ${t.task}
-           </div>
+-            ${t.task}
+-          </div>
 -        `).join("")}
-+        `
-+          )
-+          .join("")}
-       </div>`;
-   });
- 
+-      </div>`;
+-  });
+-
 -  const legend = document.getElementById("legend");
 -  legend.innerHTML = Object.entries(legendMap).map(
 -    ([goal, color]) => `
-+  document.getElementById("legend").innerHTML = Object.entries(legendMap)
-+    .map(
-+      ([goal, color]) => `
-       <div class="legend-item">
-         <span class="legend-color" style="background:${color}"></span>
-         ${goal}
-       </div>
-     `
+-      <div class="legend-item">
+-        <span class="legend-color" style="background:${color}"></span>
+-        ${goal}
+-      </div>
+-    `
 -  ).join("");
 -
 -  next();
@@ -311,9 +373,7 @@ index 0a43f3fd51efd92de9bbedbe4202c9b903e9675a..296c5ee52447eb1853db3bf3d118c3cf
 -        </ul>
 -    `;
 -}
-+    )
-+    .join("");
- 
+-
 -// 2️⃣ Day Plan & Progress
 -function showDayPlan() {
 -    mainContent.innerHTML = `
@@ -344,9 +404,7 @@ index 0a43f3fd51efd92de9bbedbe4202c9b903e9675a..296c5ee52447eb1853db3bf3d118c3cf
 -        </p>
 -    `;
 -}
-+  document.getElementById("aiSuggestion").innerHTML =
-+    "Great start! Keep high-effort tasks on your main focus day and leave buffer time for recovery.";
- 
+-
 -// 3️⃣ Rewards & Penalty
 -function showRewards() {
 -    mainContent.innerHTML = `
@@ -379,10 +437,8 @@ index 0a43f3fd51efd92de9bbedbe4202c9b903e9675a..296c5ee52447eb1853db3bf3d118c3cf
 -        <h2>🚪 Logout</h2>
 -        <p>Logout ensures data privacy and fresh session handling.</p>
 -    `;
-+  renderDatabaseTables();
-+  next();
- }
- 
+-}
+-
 -// ================= ADD BUTTONS =================
 -sidePanel.appendChild(createButton("📅 Planner", showPlanner));
 -sidePanel.appendChild(createButton("📊 Day Plan & Progress", showDayPlan));
@@ -434,40 +490,8 @@ index 0a43f3fd51efd92de9bbedbe4202c9b903e9675a..296c5ee52447eb1853db3bf3d118c3cf
 -        color: #111;
 -        font-family: Arial, sans-serif;
 -        transition: 0.3s;
-+function renderDatabaseTables() {
-+  const tableConfig = [
-+    {
-+      name: "Infrastructure",
-+      columns: ["id", "name", "type (Bridge / Streetlight)", "location"]
-+    },
-+    {
-+      name: "SensorData",
-+      columns: ["infra_id", "sensor_value", "status", "timestamp"]
-+    },
-+    {
-+      name: "Alerts",
-+      columns: ["alert_id", "infra_id", "message", "status (Pending / Resolved)"]
-     }
-+  ];
-+
-+  const container = document.getElementById("dbTables");
-+  if (!container) return;
-+
-+  container.innerHTML = tableConfig
-+    .map(
-+      (table) => `
-+      <div class="schema-card">
-+        <h4>${table.name}</h4>
-+        <table class="schema-table">
-+          <thead><tr><th>Column</th></tr></thead>
-+          <tbody>${table.columns.map((column) => `<tr><td>${column}</td></tr>`).join("")}</tbody>
-+        </table>
-+      </div>
-+    `
-+    )
-+    .join("");
-+}
- 
+-    }
+-
 -    /* Example content */
 -    .box {
 -        background: white;
@@ -524,13 +548,37 @@ index 0a43f3fd51efd92de9bbedbe4202c9b903e9675a..296c5ee52447eb1853db3bf3d118c3cf
 -        } else {
 -            btn.textContent = "🌙 Dark Mode";
 -        }
--    });
++    e.target.reset();
++    await refreshAll();
++    showMessage("Sensor data added");
++  } catch (error) {
++    showMessage(error.message, true);
++  }
++});
++
++document.getElementById("alertForm").addEventListener("submit", async (e) => {
++  e.preventDefault();
++  try {
++    await api("/api/alerts", {
++      method: "POST",
++      body: JSON.stringify({
++        infra_id: Number(document.getElementById("alertInfraId").value),
++        message: document.getElementById("alertMessage").value.trim(),
++        status: document.getElementById("alertStatus").value
++      })
+     });
 -</script>
--
++    e.target.reset();
++    await refreshAll();
++    showMessage("Alert added");
++  } catch (error) {
++    showMessage(error.message, true);
++  }
++});
+ 
 -</body>
 -</html>
-+updateUI();
-+renderDatabaseTables();
++refreshAll().catch((error) => showMessage(error.message, true));
  
 EOF
 )
