@@ -1,22 +1,25 @@
  (cd "$(git rev-parse --show-toplevel)" && git apply --3way <<'EOF' 
 diff --git a/index.html b/index.html
-index a97837d6a926c3a4f8be0047fd633440a31d6a28..78853a5fad6c40d52e83e63e892ea2208a47d8fc 100644
+index a97837d6a926c3a4f8be0047fd633440a31d6a28..3e3b6b7b660deebb6e74afb39a4405da539fe233 100644
 --- a/index.html
 +++ b/index.html
-@@ -1,433 +1,127 @@
+@@ -1,433 +1,77 @@
  <!DOCTYPE html>
  <html lang="en">
  <head>
- <meta charset="UTF-8">
- <title>Weekly Focus Planner</title>
- <meta name="viewport" content="width=device-width, initial-scale=1.0">
- <link rel="stylesheet" href="style.css">
+-<meta charset="UTF-8">
+-<title>Weekly Focus Planner</title>
+-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+-<link rel="stylesheet" href="style.css">
++  <meta charset="UTF-8" />
++  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
++  <title>InfraGuard | Full-Stack Starter</title>
++  <link rel="stylesheet" href="style.css" />
  </head>
 -
  <body>
- <div class="container">
-+  <div class="progress"><div id="bar" class="progress-bar"></div></div>
- 
+-<div class="container">
+-
 -<div class="progress"><div id="bar" class="progress-bar"></div></div>
 -
 -<!-- SLIDE 0 : LOGIN / SIGNUP -->
@@ -31,11 +34,7 @@ index a97837d6a926c3a4f8be0047fd633440a31d6a28..78853a5fad6c40d52e83e63e892ea220
 -          onclick="loginUser()">
 -    Login / Sign Up
 -  </button>
-+  <!-- SLIDE 0 : LOGIN / SIGNUP -->
-+  <div class="slide active card">
-+    <h2>Welcome 👋</h2>
-+    <p style="opacity:.8">Login or create an account to continue</p>
- 
+-
 -  <p style="font-size:13px;opacity:.7;margin-top:10px;text-align:center">
 -    No verification needed (demo mode)
 -  </p>
@@ -74,21 +73,13 @@ index a97837d6a926c3a4f8be0047fd633440a31d6a28..78853a5fad6c40d52e83e63e892ea220
 -<div class="slide card">
 -  <h2>Add Tasks per Goal</h2>
 -  <div id="tasksArea"></div>
-+    <input id="username" placeholder="Username or Email">
-+    <input id="password" type="password" placeholder="Password">
- 
+-
 -  <p><b>Task Effort Level</b> helps AI calculate mental load.</p>
-+    <button class="primary" style="width:100%;margin-top:16px" onclick="loginUser()">
-+      Login / Sign Up
-+    </button>
- 
+-
 -  <div class="nav">
 -    <button class="secondary" onclick="back()">Back</button>
 -    <button class="primary" onclick="prepareBatch()">Next</button>
-+    <p style="font-size:13px;opacity:.7;margin-top:10px;text-align:center">
-+      No verification needed (demo mode)
-+    </p>
-   </div>
+-  </div>
 -</div>
 -
 -<!-- SLIDE 4 -->
@@ -96,40 +87,23 @@ index a97837d6a926c3a4f8be0047fd633440a31d6a28..78853a5fad6c40d52e83e63e892ea220
 -  <h2>Task Batching & Focus Task</h2>
 -  <p>Select which days you will do each task</p>
 -  <div id="batchArea"></div>
- 
+-
 -  <label>Main Focus Task of the Week</label>
 -  <input id="focusTask" placeholder="Example: Daily Walk / Revision">
 -
 -  <div class="nav">
 -    <button class="secondary" onclick="back()">Back</button>
 -    <button class="primary" onclick="next()">Next</button>
-+  <!-- SLIDE 1 -->
-+  <div class="slide card">
-+    <h2>Main Focus Day</h2>
-+    <select id="mainDay">
-+      <option>Monday</option><option>Tuesday</option><option>Wednesday</option>
-+      <option>Thursday</option><option>Friday</option><option>Saturday</option><option>Sunday</option>
-+    </select>
-+    <div class="nav">
-+      <span></span>
-+      <button class="primary" onclick="next()">Next</button>
-+    </div>
-   </div>
+-  </div>
 -</div>
- 
+-
 -<!-- SLIDE 5 -->
 -<div class="slide card">
 -  <h2>Reward, Punishment & Mood</h2>
-+  <!-- SLIDE 2 -->
-+  <div class="slide card">
-+    <h2>Add Weekly Goals</h2>
-+    <input id="goalInput" placeholder="Example: Improve Health">
- 
+-
 -  <input id="reward" placeholder="Reward (Example: Watch a movie)">
 -  <input id="punishment" placeholder="Punishment (Example: No social media)">
-+    <label>Pick Goal Color</label>
-+    <input type="color" id="goalColor" value="#4CAF50">
- 
+-
 -  <label>How do you usually feel while doing tasks?</label>
 -  <select id="mood">
 -    <option>Energized</option>
@@ -137,17 +111,11 @@ index a97837d6a926c3a4f8be0047fd633440a31d6a28..78853a5fad6c40d52e83e63e892ea220
 -    <option>Tired</option>
 -    <option>Stressed</option>
 -  </select>
-+    <button class="primary" onclick="addGoal()">Add Goal</button>
-+    <div id="goals"></div>
- 
+-
 -  <div class="nav">
 -    <button class="secondary" onclick="back()">Back</button>
 -    <button class="primary" onclick="generate()">Generate</button>
-+    <div class="nav">
-+      <button class="secondary" onclick="back()">Back</button>
-+      <button class="primary" onclick="next()">Next</button>
-+    </div>
-   </div>
+-  </div>
 -</div>
 -
 -<!-- SLIDE 6 -->
@@ -265,18 +233,13 @@ index a97837d6a926c3a4f8be0047fd633440a31d6a28..78853a5fad6c40d52e83e63e892ea220
 -    <title>Side Panel System</title>
 -</head>
 -<body>
- 
+-
 -<!-- ================= SIDE PANEL ================= -->
 -<div style="width:220px; height:100vh; border-right:2px solid #000; float:left; padding:10px;">
-+  <!-- SLIDE 3 -->
-+  <div class="slide card">
-+    <h2>Add Tasks per Goal</h2>
-+    <div id="tasksArea"></div>
- 
+-
 -    <h3>SIDE PANEL</h3>
 -    <hr>
-+    <p><b>Task Effort Level</b> helps AI calculate mental load.</p>
- 
+-
 -    <button>📅 Planner</button><br><br>
 -    <button>📊 Day Plan & Progress</button><br><br>
 -    <button>🏆 Rewards & Penalty</button><br><br>
@@ -414,12 +377,7 @@ index a97837d6a926c3a4f8be0047fd633440a31d6a28..78853a5fad6c40d52e83e63e892ea220
 -        color: #111;
 -        transition: 0.3s;
 -    }
-+    <div class="nav">
-+      <button class="secondary" onclick="back()">Back</button>
-+      <button class="primary" onclick="prepareBatch()">Next</button>
-+    </div>
-+  </div>
- 
+-
 -    /* Button */
 -    .toggle-btn {
 -        position: fixed;
@@ -433,55 +391,23 @@ index a97837d6a926c3a4f8be0047fd633440a31d6a28..78853a5fad6c40d52e83e63e892ea220
 -        background: #2563eb;
 -        color: white;
 -    }
-+  <!-- SLIDE 4 -->
-+  <div class="slide card">
-+    <h2>Task Batching & Focus Task</h2>
-+    <p>Select which days you will do each task</p>
-+    <div id="batchArea"></div>
- 
+-
 -    /* DARK CONTRAST MODE */
 -    body.dark {
 -        background: #000000;
 -        color: #ffffff;
 -    }
-+    <label>Main Focus Task of the Week</label>
-+    <input id="focusTask" placeholder="Example: Daily Walk / Revision">
- 
+-
 -    body.dark .card {
 -        background: #111111;
 -        color: #ffffff;
 -    }
-+    <div class="nav">
-+      <button class="secondary" onclick="back()">Back</button>
-+      <button class="primary" onclick="next()">Next</button>
-+    </div>
-+  </div>
- 
+-
 -    body.dark button {
 -        background: #ffffff;
 -        color: #000000;
 -    }
-+  <!-- SLIDE 5 -->
-+  <div class="slide card">
-+    <h2>Reward, Punishment & Mood</h2>
-+
-+    <input id="reward" placeholder="Reward (Example: Watch a movie)">
-+    <input id="punishment" placeholder="Punishment (Example: No social media)">
-+
-+    <label>How do you usually feel while doing tasks?</label>
-+    <select id="mood">
-+      <option>Energized</option>
-+      <option>Normal</option>
-+      <option>Tired</option>
-+      <option>Stressed</option>
-+    </select>
-+
-+    <div class="nav">
-+      <button class="secondary" onclick="back()">Back</button>
-+      <button class="primary" onclick="generate()">Generate</button>
-+    </div>
-+  </div>
- 
+-
 -    /* Card (example content) */
 -    .card {
 -        background: white;
@@ -492,38 +418,92 @@ index a97837d6a926c3a4f8be0047fd633440a31d6a28..78853a5fad6c40d52e83e63e892ea220
 -    }
 -</style>
 -</head>
-+  <!-- SLIDE 6 -->
-+  <div class="slide card">
-+    <h2>Your Weekly Timetable</h2>
-+    <div class="timetable" id="table"></div>
- 
+-
 -<body>
-+    <h3>AI Suggestions</h3>
-+    <div id="aiSuggestion" class="card"></div>
- 
+-
 -<button class="toggle-btn" onclick="toggleDarkMode()">
 -    🌙 Dark Mode
 -</button>
-+    <h3 style="margin-top:24px">Color Legend</h3>
-+    <div id="legend" class="legend"></div>
- 
+-
 -<div class="card">
 -    <h2>My Website Content</h2>
 -    <p>
 -        Click the button to switch between normal colors and dark contrast colors.
 -    </p>
-+    <h3 style="margin-top:24px">InfraGuard Database Tables</h3>
-+    <div id="dbTables"></div>
-+  </div>
- </div>
- 
+-</div>
+-
 -<script>
 -    function toggleDarkMode() {
 -        document.body.classList.toggle("dark");
 -    }
 -</script>
 -
-+<script src="script.js"></script>
++  <header class="topbar">
++    <h1>InfraGuard Monitoring Console</h1>
++    <p>Frontend + Backend + SQLite ready</p>
++  </header>
++
++  <main class="framework-grid">
++    <section class="panel">
++      <h2>Infrastructure</h2>
++      <form id="infraForm" class="form-grid">
++        <input id="infraName" placeholder="Name (e.g., River Bridge)" required />
++        <select id="infraType" required>
++          <option value="">Select type</option>
++          <option value="Bridge">Bridge</option>
++          <option value="Streetlight">Streetlight</option>
++        </select>
++        <input id="infraLocation" placeholder="Location" required />
++        <button type="submit">Add Infrastructure</button>
++      </form>
++      <div class="table-wrap">
++        <table>
++          <thead><tr><th>ID</th><th>Name</th><th>Type</th><th>Location</th></tr></thead>
++          <tbody id="infraBody"></tbody>
++        </table>
++      </div>
++    </section>
++
++    <section class="panel">
++      <h2>SensorData</h2>
++      <form id="sensorForm" class="form-grid">
++        <input id="sensorInfraId" type="number" placeholder="Infrastructure ID" required />
++        <input id="sensorValue" type="number" step="0.01" placeholder="Sensor Value" required />
++        <input id="sensorStatus" placeholder="Status (Normal / Warning)" required />
++        <button type="submit">Add Sensor Data</button>
++      </form>
++      <div class="table-wrap">
++        <table>
++          <thead><tr><th>Infra ID</th><th>Name</th><th>Value</th><th>Status</th><th>Timestamp</th></tr></thead>
++          <tbody id="sensorBody"></tbody>
++        </table>
++      </div>
++    </section>
++
++    <section class="panel">
++      <h2>Alerts</h2>
++      <form id="alertForm" class="form-grid">
++        <input id="alertInfraId" type="number" placeholder="Infrastructure ID" required />
++        <input id="alertMessage" placeholder="Alert message" required />
++        <select id="alertStatus" required>
++          <option value="">Select status</option>
++          <option value="Pending">Pending</option>
++          <option value="Resolved">Resolved</option>
++        </select>
++        <button type="submit">Add Alert</button>
++      </form>
++      <div class="table-wrap">
++        <table>
++          <thead><tr><th>Alert ID</th><th>Infra ID</th><th>Name</th><th>Message</th><th>Status</th></tr></thead>
++          <tbody id="alertBody"></tbody>
++        </table>
++      </div>
++    </section>
++  </main>
++
++  <div id="flash"></div>
++
++  <script src="script.js"></script>
  </body>
  </html>
 -    
