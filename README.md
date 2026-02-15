@@ -1,41 +1,55 @@
  (cd "$(git rev-parse --show-toplevel)" && git apply --3way <<'EOF' 
 diff --git a/README.md b/README.md
-index d160fa147b61b0b96be814bd41cee00867612599..e8fb1814170fb6284d6aec7f80d622f65db018bd 100644
+index d160fa147b61b0b96be814bd41cee00867612599..db48e674fb84ccf506629130289fb8c8fbcd4a95 100644
 --- a/README.md
 +++ b/README.md
-@@ -1 +1,30 @@
+@@ -1 +1,44 @@
 -# Ai-for-learning-and-academic-project
 \ No newline at end of file
-+# Ai-for-learning-and-academic-project
++# InfraGuard Full-Stack Starter
 +
-+## InfraGuard Database Setup
++This project includes a simple **frontend + backend + SQLite database** setup so you can build hackathon features quickly.
 +
-+A hackathon-level relational schema for **InfraGuard** is included in `database_schema.sql`.
++## Database Tables
++Schema file: `database_schema.sql`
 +
-+### Tables
-+- `Infrastructure`
-+  - `id`
-+  - `name`
-+  - `type` (`Bridge` / `Streetlight`)
-+  - `location`
-+- `SensorData`
-+  - `infra_id`
-+  - `sensor_value`
-+  - `status`
-+  - `timestamp`
-+- `Alerts`
-+  - `alert_id`
-+  - `infra_id`
-+  - `message`
-+  - `status` (`Pending` / `Resolved`)
++1. `Infrastructure`
++   - `id`
++   - `name`
++   - `type` (`Bridge` / `Streetlight`)
++   - `location`
++2. `SensorData`
++   - `infra_id`
++   - `sensor_value`
++   - `status`
++   - `timestamp`
++3. `Alerts`
++   - `alert_id`
++   - `infra_id`
++   - `message`
++   - `status` (`Pending` / `Resolved`)
 +
-+### Run locally (SQLite)
++## Run the app (no external dependencies)
 +```bash
-+sqlite3 infraguard.db < database_schema.sql
++python3 server.py
 +```
 +
-+### Website preview
-+The final slide of the planner UI now includes an **InfraGuard Database Tables** section that visually lists all three tables and their required columns.
++Open: `http://localhost:3000`
++
++## API Endpoints
++- `GET /api/health`
++- `GET /api/infrastructure`
++- `POST /api/infrastructure`
++- `GET /api/sensordata`
++- `POST /api/sensordata`
++- `GET /api/alerts`
++- `POST /api/alerts`
++
++## Project framework
++- `index.html` has three modules: Infrastructure, SensorData, Alerts.
++- `style.css` provides a reusable dashboard-style UI framework.
++- `script.js` connects forms to backend APIs and refreshes tables automatically.
++- `server.py` provides backend APIs and initializes SQLite from `database_schema.sql`.
  
 EOF
 )
