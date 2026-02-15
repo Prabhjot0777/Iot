@@ -1,0 +1,512 @@
+ (cd "$(git rev-parse --show-toplevel)" && git apply --3way <<'EOF' 
+diff --git a/style.css b/style.css
+index f96f6151b37408e0f6d3a6f89cb03cc21c9aedd6..b47dce6ccf5bdaf55cbb00c1f3743d1cda18e9af 100644
+--- a/style.css
++++ b/style.css
+@@ -1,480 +1,226 @@
+ :root{
+   --bg:#020617;
+   --card:rgba(255,255,255,0.08);
+   --border:rgba(255,255,255,0.18);
+   --primary:#38bdf8;
+   --text:#e5e7eb;
+   --danger:#f87171;
+   --success:#22c55e;
+ }
+ 
+ *{
+   box-sizing:border-box;
+   margin:0;
+   padding:0;
+ }
+ 
+ body{
+   font-family:Inter,system-ui;
+   background:radial-gradient(circle at top,#0f172a,#020617);
+   color:var(--text);
+   min-height:100vh;
+ }
+ 
+-/* CONTAINER */
+ .container{
+   max-width:1000px;
+   margin:auto;
+   padding:40px 20px;
+ }
+ 
+-/* CARD */
+ .card{
+   background:var(--card);
+   backdrop-filter:blur(16px);
+   border:1px solid var(--border);
+   border-radius:20px;
+   padding:32px;
+ }
+ 
+-/* SLIDES */
+ .slide{display:none}
+ .slide.active{
+   display:block;
+   animation:fade .35s ease;
+ }
+ 
+ @keyframes fade{
+   from{opacity:0;transform:translateY(10px)}
+   to{opacity:1}
+ }
+ 
+-/* INPUTS */
+ input,textarea,select{
+   width:100%;
+   padding:12px;
+   border-radius:12px;
+   background:#020617;
+   border:1px solid var(--border);
+   color:white;
+   margin-top:10px;
+   outline:none;
+ }
+ 
+-input::placeholder{
+-  color:#9ca3af;
+-}
++input::placeholder{ color:#9ca3af; }
+ 
+-/* BUTTONS */
+ button{
+   padding:12px 18px;
+   border-radius:14px;
+   border:none;
+   font-weight:700;
+   cursor:pointer;
+ }
+ 
+ .primary{
+   background:linear-gradient(135deg,#38bdf8,#0ea5e9);
+   color:black;
+ }
+ 
+ .secondary{
+   background:#020617;
+   color:white;
+   border:1px solid var(--border);
+ }
+ 
+-/* PROGRESS BAR */
+ .progress{
+   height:6px;
+   background:rgba(255,255,255,.1);
+   border-radius:10px;
+   margin-bottom:24px;
+ }
+ 
+ .progress-bar{
+   height:100%;
+   width:0%;
+   background:linear-gradient(90deg,#38bdf8,#22d3ee);
+   transition:.3s;
+ }
+ 
+-/* GOAL & TASK BOX */
+ .goal-box,
+ .task-box{
+   border:1px solid var(--border);
+   border-radius:14px;
+   padding:14px;
+   margin-top:14px;
+   position:relative;
+ }
+ 
+-.goal-box h4,
+-.task-box h4{
+-  font-size:15px;
+-}
+-
+-/* COLOR BAR */
+ .color-bar{
+   height:8px;
+   border-radius:6px;
+   margin:10px 0;
+ }
+ 
+-/* DAYS */
+ .days{
+   display:flex;
+   flex-wrap:wrap;
+   gap:10px;
+   margin-top:10px;
+ }
+ 
+-.day{
+-  font-size:13px;
+-  padding:6px 10px;
+-  border-radius:10px;
+-  border:1px solid var(--border);
+-  cursor:pointer;
+-}
+-
+-.day.active{
+-  background:var(--primary);
+-  color:black;
+-  font-weight:700;
+-}
+-
+-/* NAVIGATION */
+ .nav{
+   display:flex;
+   justify-content:space-between;
+   align-items:center;
+   margin-top:24px;
+ }
+ 
+-/* TIMETABLE */
+ .timetable{
+   display:grid;
+   grid-template-columns:repeat(auto-fit,minmax(130px,1fr));
+   gap:14px;
+   margin-top:20px;
+ }
+ 
+ .day-column{
+   background:rgba(0,0,0,.4);
+   border-radius:14px;
+   padding:12px;
+ }
+ 
+ .day-column h4{
+   font-size:14px;
+   text-align:center;
+ }
+ 
+-/* TASK BLOCK */
+ .task{
+   font-size:13px;
+   padding:6px;
+   border-radius:6px;
+   margin-top:6px;
+   color:black;
+   font-weight:600;
+ }
+ 
+-/* LEGEND */
+ .legend{
+   display:flex;
+   flex-wrap:wrap;
+   gap:12px;
+   margin-top:12px;
+ }
+ 
+ .legend-item{
+   display:flex;
+   align-items:center;
+   gap:8px;
+   background:rgba(0,0,0,.35);
+   border:1px solid var(--border);
+   padding:8px 12px;
+   border-radius:12px;
+   font-size:13px;
+ }
+ 
+ .legend-color{
+   width:14px;
+   height:14px;
+   border-radius:4px;
+ }
+ 
+-/* DELETE BUTTON */
+ .delete{
+   position:absolute;
+   top:10px;
+   right:12px;
+   cursor:pointer;
+   color:var(--danger);
+   font-weight:900;
+ }
+ 
+-/* AI SUGGESTION BOX */
+ #aiSuggestion{
+   margin-top:14px;
+   padding:14px;
+   border-radius:14px;
+   background:rgba(0,0,0,.35);
+   border:1px solid var(--border);
+   font-size:14px;
+   line-height:1.6;
+ }
+ 
+-/* MOOD SELECT */
+-#mood{
+-  margin-top:10px;
+-}
+-
+-/* FOCUS TASK HIGHLIGHT */
+-.focus-task{
+-  border:2px solid var(--success);
+-  box-shadow:0 0 12px rgba(34,197,94,.4);
+-}
+-/* LOGIN / SIGNUP SLIDE */
+-
+-.slide h2 {
+-  margin-bottom: 6px;
+-}
+-
+-.slide p {
+-  margin-top: 0;
+-  margin-bottom: 18px;
+-}
++.slide h2 { margin-bottom: 6px; }
++.slide p { margin-top: 0; margin-bottom: 18px; }
++.slide input[type="password"] { margin-top: 12px; }
++.slide.active.card { display: flex; flex-direction: column; justify-content: center; }
+ 
+-.slide input[type="password"] {
++#dbTables {
++  display: grid;
++  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
++  gap: 12px;
+   margin-top: 12px;
+ }
+ 
+-/* Center login content nicely */
+-.slide.active.card {
+-  display: flex;
+-  flex-direction: column;
+-  justify-content: center;
++.schema-card {
++  background: rgba(0, 0, 0, 0.35);
++  border: 1px solid var(--border);
++  border-radius: 12px;
++  padding: 12px;
+ }
+ 
+-/* Login button full width */
+-.slide button.primary {
+-  width: 100%;
+-}
++.schema-card h4 { margin-bottom: 8px; }
+ 
+-/* Small text under login */
+-.slide p:last-child {
+-  text-align: center;
++.schema-table {
++  width: 100%;
++  border-collapse: collapse;
+   font-size: 13px;
+-  opacity: 0.7;
+-}
+-/* ===== RESET ===== */
+-* {
+-    margin: 0;
+-    padding: 0;
+-    box-sizing: border-box;
+-    font-family: Arial, Helvetica, sans-serif;
+-}
+-
+-/* ===== PAGE LAYOUT ===== */
+-body {
+-    background-color: #f4f4f4;
+-}
+-
+-/* ===== SIDE PANEL ===== */
+-.side-panel {
+-    width: 220px;
+-    height: 100vh;
+-    background-color: #ffffff;
+-    border-right: 2px solid #000;
+-    padding: 15px;
+-    position: fixed;
+-    top: 0;
+-    left: 0;
+-}
+-
+-/* ===== PANEL TITLE ===== */
+-.side-panel h3 {
+-    text-align: center;
+-    margin-bottom: 15px;
+-}
+-
+-/* ===== SIDE PANEL BUTTONS ===== */
+-.side-panel button {
+-    width: 100%;
+-    padding: 10px;
+-    margin-bottom: 12px;
+-    font-size: 15px;
+-    cursor: pointer;
+-    border: 1px solid #000;
+-    background-color: #eaeaea;
+-}
+-
+-.side-panel button:hover {
+-    background-color: #d6d6d6;
+-}
+-
+-/* ===== MAIN CONTENT ===== */
+-.main-content {
+-    margin-left: 240px;
+-    padding: 20px;
+-}
+-
+-/* ===== MODULE HEADINGS ===== */
+-.main-content h2 {
+-    margin-bottom: 10px;
+-}
+-
+-.main-content h3 {
+-    margin-top: 15px;
+-    margin-bottom: 8px;
+-}
+-
+-/* ===== LIST STYLE ===== */
+-.main-content ul {
+-    margin-left: 20px;
+-    margin-bottom: 15px;
+-}
+-
+-.main-content li {
+-    margin-bottom: 6px;
+-}
+-
+-/* ===== PROGRESS BUTTONS ===== */
+-.progress-buttons button {
+-    padding: 6px 10px;
+-    margin-right: 5px;
+-    margin-bottom: 8px;
+-    cursor: pointer;
+ }
+ 
+-/* ===== VIVA TEXT ===== */
+-.viva-line {
+-    font-style: italic;
+-    margin-top: 10px;
++.schema-table th,
++.schema-table td {
++  border: 1px solid var(--border);
++  padding: 8px;
++  text-align: left;
+ }
+-<!DOCTYPE html>
+-<html lang="en">
+-<head>
+-    <meta charset="UTF-8">
+-    <title>Contrast Colours in CSS</title>
+-
+-    <style>
+-        body {
+-            font-family: Arial, sans-serif;
+-            background-color: #eeeeee;
+-            padding: 30px;
+-        }
+-
+-        .dark-bg {
+-            background-color: #000000;
+-            color: #ffffff;
+-            padding: 20px;
+-            margin-bottom: 20px;
+-            border-radius: 8px;
+-        }
+-
+-        .light-bg {
+-            background-color: #ffffff;
+-            color: #000000;
+-            padding: 20px;
+-            border-radius: 8px;
+-        }
+-
+-        .color-contrast {
+-            background-color: #2b6cb0;
+-            color: #ffd700;
+-            padding: 20px;
+-            margin-top: 20px;
+-            border-radius: 8px;
+-        }
+-
+-        .button {
+-            background-color: #000000;
+-            color: #ffffff;
+-            padding: 10px 15px;
+-            border: none;
+-            border-radius: 5px;
+-            margin-top: 15px;
+-        }
+-    </style>
+-</head>
+-<body>
+-<!DOCTYPE html>
+-<html lang="en">
+-<head>
+-<meta charset="UTF-8">
+-<title>CSS Dark Contrast Toggle</title>
+-
+-<style>
+-    body {
+-        margin: 0;
+-        font-family: Arial, sans-serif;
+-        background: #f4f6f8;
+-        color: #111;
+-        transition: 0.3s;
+-    }
+-
+-    /* Hide checkbox */
+-    #darkToggle {
+-        display: none;
+-    }
+-
+-    /* Button style */
+-    .toggle-btn {
+-        position: fixed;
+-        top: 20px;
+-        right: 20px;
+-        background: #2563eb;
+-        color: white;
+-        padding: 10px 18px;
+-        border-radius: 20px;
+-        cursor: pointer;
+-        font-size: 15px;
+-    }
+-
+-    /* Example content */
+-    .card {
+-        background: white;
+-        padding: 20px;
+-        margin: 60px auto;
+-        width: 70%;
+-        border-radius: 10px;
+-        transition: 0.3s;
+-    }
+-
+-    /* DARK CONTRAST MODE (CSS MAGIC) */
+-    #darkToggle:checked ~ .site {
+-        background: #000;
+-        color: #fff;
+-    }
+-
+-    #darkToggle:checked ~ .site .card {
+-        background: #111;
+-        color: #fff;
+-    }
+-
+-    #darkToggle:checked + label {
+-        background: #fff;
+-        color: #000;
+-    }
+-</style>
+-</head>
+-
+-<body>
+-
+-<input type="checkbox" id="darkToggle">
+-<label for="darkToggle" class="toggle-btn">🌙 Dark Mode</label>
+-
+-<div class="site">
+-    <div class="card">
+-        <h2>My Website</h2>
+-        <p>Click the button to change to dark contrast color using only CSS.</p>
+-    </div>
+-</div>
+-
+-</body>
+-</html>
+-    
+ 
+EOF
+)
